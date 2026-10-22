@@ -26,3 +26,21 @@ def test_booking_confirmation_shows_number_of_places(client):
     response = book(client, "Lucky Club", "Future Competition", "2")
 
     assert b"Great-booking complete! You booked 2 places." in response.data
+
+
+def test_booking_more_places_than_points_is_refused(client):
+    response = book(client, "Small Club", "Future Competition", "6")
+
+    assert response.status_code == 200
+    assert b"You do not have enough points" in response.data
+    assert b"Great-booking complete!" not in response.data
+    assert int(get(server.clubs, "Small Club")["points"]) == 4
+    assert int(get(server.competitions, "Future Competition")["numberOfPlaces"]) == 25
+
+
+def test_booking_exactly_all_points_is_accepted(client):
+    response = book(client, "Small Club", "Future Competition", "4")
+
+    assert b"Great-booking complete! You booked 4 places." in response.data
+    assert int(get(server.clubs, "Small Club")["points"]) == 0
+    assert int(get(server.competitions, "Future Competition")["numberOfPlaces"]) == 21
