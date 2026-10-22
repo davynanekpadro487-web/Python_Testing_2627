@@ -27,6 +27,11 @@ def competitions_data():
             "date": "2020-03-27 10:00:00",
             "numberOfPlaces": "13",
         },
+        {
+            "name": "Small Competition",
+            "date": "2030-09-01 10:00:00",
+            "numberOfPlaces": "3",
+        },
     ]
 
 
