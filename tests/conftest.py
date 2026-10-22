@@ -9,6 +9,7 @@ def clubs_data():
     return [
         {"name": "Test Club", "email": "test@club.com", "points": "10"},
         {"name": "Small Club", "email": "small@club.com", "points": "4"},
+        {"name": "Lucky Club", "email": "lucky@club.com", "points": "13"},
     ]
 
 
