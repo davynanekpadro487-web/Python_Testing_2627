@@ -36,6 +36,8 @@ def mock_data(monkeypatch, clubs_data, competitions_data):
     pour chaque test, afin que les tests ne s'influencent pas entre eux."""
     monkeypatch.setattr(server, "clubs", clubs_data)
     monkeypatch.setattr(server, "competitions", competitions_data)
+    # Registre des places réservées par club et par compétition, vide à chaque test.
+    monkeypatch.setattr(server, "bookings", {}, raising=False)
 
 
 @pytest.fixture
