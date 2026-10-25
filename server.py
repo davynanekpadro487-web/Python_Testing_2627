@@ -27,6 +27,8 @@ bookings = {}
 
 PAST_COMPETITION_ERROR = "This competition has already taken place, booking is not possible."
 INVALID_PLACES_ERROR = "Please enter a valid number of places (a whole number greater than 0)."
+CLUB_NOT_FOUND_ERROR = "Club not found, please log in again."
+COMPETITION_NOT_FOUND_ERROR = "Competition not found, please choose a competition from the list."
 
 
 def isPastCompetition(competition):
@@ -54,22 +56,31 @@ def showSummary():
 
 @app.route('/book/<competition>/<club>')
 def book(competition,club):
-    foundClub = [c for c in clubs if c['name'] == club][0]
-    foundCompetition = [c for c in competitions if c['name'] == competition][0]
+    foundClub = next((c for c in clubs if c['name'] == club), None)
+    if foundClub is None:
+        flash(CLUB_NOT_FOUND_ERROR)
+        return redirect(url_for('index'))
+    foundCompetition = next((c for c in competitions if c['name'] == competition), None)
+    if foundCompetition is None:
+        flash(COMPETITION_NOT_FOUND_ERROR)
+        return render_template('welcome.html', club=foundClub, competitions=competitions)
     if isPastCompetition(foundCompetition):
         flash(PAST_COMPETITION_ERROR)
         return render_template('welcome.html', club=foundClub, competitions=competitions)
-    if foundClub and foundCompetition:
-        return render_template('booking.html',club=foundClub,competition=foundCompetition)
-    else:
-        flash("Something went wrong-please try again")
-        return render_template('welcome.html', club=club, competitions=competitions)
+    return render_template('booking.html',club=foundClub,competition=foundCompetition)
 
 
 @app.route('/purchasePlaces',methods=['POST'])
 def purchasePlaces():
-    competition = [c for c in competitions if c['name'] == request.form['competition']][0]
-    club = [c for c in clubs if c['name'] == request.form['club']][0]
+    club = next((c for c in clubs if c['name'] == request.form.get('club')), None)
+    if club is None:
+        flash(CLUB_NOT_FOUND_ERROR)
+        return redirect(url_for('index'))
+    competition = next((c for c in competitions
+                        if c['name'] == request.form.get('competition')), None)
+    if competition is None:
+        flash(COMPETITION_NOT_FOUND_ERROR)
+        return render_template('welcome.html', club=club, competitions=competitions)
     try:
         placesRequired = int(request.form.get('places', ''))
     except ValueError:
