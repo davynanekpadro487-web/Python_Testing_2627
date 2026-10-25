@@ -26,6 +26,7 @@ MAX_PLACES_PER_COMPETITION = 12
 bookings = {}
 
 PAST_COMPETITION_ERROR = "This competition has already taken place, booking is not possible."
+INVALID_PLACES_ERROR = "Please enter a valid number of places (a whole number greater than 0)."
 
 
 def isPastCompetition(competition):
@@ -69,7 +70,13 @@ def book(competition,club):
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
-    placesRequired = int(request.form['places'])
+    try:
+        placesRequired = int(request.form.get('places', ''))
+    except ValueError:
+        placesRequired = 0
+    if placesRequired <= 0:
+        flash(INVALID_PLACES_ERROR)
+        return render_template('welcome.html', club=club, competitions=competitions)
     if isPastCompetition(competition):
         flash(PAST_COMPETITION_ERROR)
         return render_template('welcome.html', club=club, competitions=competitions)
