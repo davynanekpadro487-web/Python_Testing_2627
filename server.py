@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from flask import Flask,render_template,request,redirect,flash,url_for
 
 
@@ -24,6 +25,15 @@ MAX_PLACES_PER_COMPETITION = 12
 # Places déjà réservées : {(nom du club, nom de la compétition): nombre de places}
 bookings = {}
 
+PAST_COMPETITION_ERROR = "This competition has already taken place, booking is not possible."
+
+
+def isPastCompetition(competition):
+    """Retourne True si la date de la compétition est déjà passée."""
+    competitionDate = datetime.strptime(competition['date'], "%Y-%m-%d %H:%M:%S")
+    return competitionDate < datetime.now()
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -45,6 +55,9 @@ def showSummary():
 def book(competition,club):
     foundClub = [c for c in clubs if c['name'] == club][0]
     foundCompetition = [c for c in competitions if c['name'] == competition][0]
+    if isPastCompetition(foundCompetition):
+        flash(PAST_COMPETITION_ERROR)
+        return render_template('welcome.html', club=foundClub, competitions=competitions)
     if foundClub and foundCompetition:
         return render_template('booking.html',club=foundClub,competition=foundCompetition)
     else:
@@ -57,6 +70,9 @@ def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
+    if isPastCompetition(competition):
+        flash(PAST_COMPETITION_ERROR)
+        return render_template('welcome.html', club=club, competitions=competitions)
     if placesRequired > int(competition['numberOfPlaces']):
         flash(f"Not enough places available: only {competition['numberOfPlaces']} "
               f"places left for this competition.")
