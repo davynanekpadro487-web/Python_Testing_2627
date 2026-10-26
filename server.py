@@ -25,10 +25,38 @@ MAX_PLACES_PER_COMPETITION = 12
 # Places déjà réservées : {(nom du club, nom de la compétition): nombre de places}
 bookings = {}
 
-PAST_COMPETITION_ERROR = "This competition has already taken place, booking is not possible."
-INVALID_PLACES_ERROR = "Please enter a valid number of places (a whole number greater than 0)."
-CLUB_NOT_FOUND_ERROR = "Club not found, please log in again."
-COMPETITION_NOT_FOUND_ERROR = "Competition not found, please choose a competition from the list."
+PAST_COMPETITION_ERROR = "Cette compétition a déjà eu lieu, la réservation n'est pas possible."
+INVALID_PLACES_ERROR = "Veuillez saisir un nombre de places valide (un entier supérieur à 0)."
+CLUB_NOT_FOUND_ERROR = "Club introuvable, veuillez vous reconnecter."
+COMPETITION_NOT_FOUND_ERROR = (
+    "Compétition introuvable, veuillez choisir une compétition dans la liste."
+)
+
+FRENCH_MONTHS = [
+    "janvier",
+    "février",
+    "mars",
+    "avril",
+    "mai",
+    "juin",
+    "juillet",
+    "août",
+    "septembre",
+    "octobre",
+    "novembre",
+    "décembre",
+]
+
+
+@app.template_filter('date_fr')
+def date_fr(value):
+    """Formate une date 'YYYY-MM-DD HH:MM:SS' en '27 mars 2020 à 10h00'."""
+    try:
+        dt = datetime.strptime(str(value), "%Y-%m-%d %H:%M:%S")
+    except (ValueError, TypeError):
+        return value
+    month_name = FRENCH_MONTHS[dt.month - 1]
+    return f"{dt.day} {month_name} {dt.year} à {dt.hour:02d}h{dt.minute:02d}"
 
 
 def isPastCompetition(competition):
@@ -45,11 +73,11 @@ def index():
 def showSummary():
     email = request.form.get('email', '').strip()
     if not email:
-        flash("Please enter your email.")
+        flash("Veuillez saisir votre adresse e-mail.")
         return redirect(url_for('index'))
     club = next((club for club in clubs if club['email'] == email), None)
     if club is None:
-        flash("Sorry, that email was not found.")
+        flash("Désolé, cette adresse e-mail est introuvable.")
         return redirect(url_for('index'))
     return render_template('welcome.html',club=club,competitions=competitions)
 
@@ -92,23 +120,23 @@ def purchasePlaces():
         flash(PAST_COMPETITION_ERROR)
         return render_template('welcome.html', club=club, competitions=competitions)
     if placesRequired > int(competition['numberOfPlaces']):
-        flash(f"Not enough places available: only {competition['numberOfPlaces']} "
-              f"places left for this competition.")
+        flash(f"Pas assez de places disponibles : il ne reste que {competition['numberOfPlaces']} "
+              f"place(s) pour cette compétition.")
         return render_template('welcome.html', club=club, competitions=competitions)
     if placesRequired > int(club['points']):
-        flash(f"You do not have enough points: you have {club['points']} points "
-              f"and requested {placesRequired} places.")
+        flash(f"Vous n'avez pas assez de points : vous avez {club['points']} point(s) "
+              f"et avez demandé {placesRequired} place(s).")
         return render_template('welcome.html', club=club, competitions=competitions)
     bookingKey = (club['name'], competition['name'])
     alreadyBooked = bookings.get(bookingKey, 0)
     if alreadyBooked + placesRequired > MAX_PLACES_PER_COMPETITION:
-        flash(f"You cannot book more than {MAX_PLACES_PER_COMPETITION} places per competition "
-              f"(already booked: {alreadyBooked}).")
+        flash(f"Vous ne pouvez pas réserver plus de {MAX_PLACES_PER_COMPETITION} places par compétition "
+              f"(déjà réservées : {alreadyBooked}).")
         return render_template('welcome.html', club=club, competitions=competitions)
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
     club['points'] = int(club['points']) - placesRequired
     bookings[bookingKey] = alreadyBooked + placesRequired
-    flash(f'Great-booking complete! You booked {placesRequired} places.')
+    flash(f'Réservation confirmée : {placesRequired} place(s) réservée(s).')
     return render_template('welcome.html', club=club, competitions=competitions)
 
 

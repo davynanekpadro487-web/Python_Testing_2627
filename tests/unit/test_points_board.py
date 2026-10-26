@@ -1,5 +1,10 @@
 """Tests unitaires : tableau public des points des clubs (route GET /points)."""
+import html
 import re
+
+
+def text_of(response):
+    return html.unescape(response.data.decode("utf-8"))
 
 
 def row_pattern(name, points):
@@ -14,11 +19,14 @@ def row_pattern(name, points):
 def test_points_page_is_public_and_lists_all_clubs(client):
     # Aucun appel à /showSummary : l'utilisateur n'est pas connecté.
     response = client.get("/points")
+    body = text_of(response)
 
     assert response.status_code == 200
+    assert "Points des clubs" in body
     assert row_pattern("Test Club", 10).search(response.data)
     assert row_pattern("Small Club", 4).search(response.data)
     assert row_pattern("Lucky Club", 13).search(response.data)
+    assert "Retour à l'accueil" in body
 
 
 def test_points_page_shows_updated_points_after_booking(client):
@@ -36,16 +44,20 @@ def test_points_page_shows_updated_points_after_booking(client):
 
 def test_index_page_links_to_points_page(client):
     response = client.get("/")
+    body = text_of(response)
 
     assert response.status_code == 200
-    assert b'href="/points"' in response.data
+    assert 'href="/points"' in body
+    assert "Voir les points des clubs" in body
 
 
 def test_welcome_page_links_to_points_page(client):
     response = client.post("/showSummary", data={"email": "test@club.com"})
+    body = text_of(response)
 
     assert response.status_code == 200
-    assert b'href="/points"' in response.data
+    assert 'href="/points"' in body
+    assert "Voir les points des clubs" in body
 
 
 # --- Sad path ---
