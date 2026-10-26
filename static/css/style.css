@@ -1,0 +1,477 @@
+:root {
+    --color-navy: #12284C;
+    --color-blue-link: #1F4E8C;
+    --color-bg-page: #FAFAF7;
+    --color-bg-surface: #FFFFFF;
+    --color-gold: #B8912F;
+    --color-gold-light: #F3E7C4;
+    --color-text: #2B2B2B;
+    --color-error: #9B2C2C;
+    --color-error-bg: #FDF2F2;
+    --color-border: #D8DCE3;
+    --color-row-alt: #F6F7F9;
+    --color-muted: #5A6270;
+    --font-heading: "Libre Baskerville", Georgia, "Times New Roman", serif;
+    --font-body: "Source Sans 3", "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg-page);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* Header */
+.site-header {
+    background-color: var(--color-navy);
+    color: var(--color-bg-surface);
+    border-bottom: 3px solid var(--color-gold);
+    padding: 1rem 0;
+}
+
+.header-inner {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.site-brand {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-bg-surface);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+}
+
+.site-brand:hover {
+    color: var(--color-gold-light);
+}
+
+/* Main container */
+.main-container {
+    width: 100%;
+    max-width: 960px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    flex: 1;
+}
+
+/* Typography */
+h1,
+h2,
+h3 {
+    font-family: var(--font-heading);
+    color: var(--color-navy);
+    margin-top: 0;
+    line-height: 1.3;
+}
+
+h1 {
+    font-size: 1.65rem;
+    border-bottom: 2px solid var(--color-gold);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+h2 {
+    font-size: 1.35rem;
+    margin-bottom: 0.75rem;
+}
+
+h3 {
+    font-size: 1.15rem;
+    margin-bottom: 1rem;
+}
+
+a {
+    color: var(--color-blue-link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+a:hover {
+    color: var(--color-navy);
+    text-decoration-color: var(--color-gold);
+}
+
+/* Flash messages */
+.flash-container {
+    margin-bottom: 1.5rem;
+}
+
+.flash-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.flash-message {
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-left-width: 4px;
+    border-radius: 2px;
+    background-color: var(--color-bg-surface);
+    font-weight: 600;
+}
+
+.flash-success {
+    border-left-color: var(--color-gold);
+    background-color: var(--color-gold-light);
+    color: var(--color-navy);
+}
+
+.flash-error {
+    border-left-color: var(--color-error);
+    background-color: var(--color-error-bg);
+    color: var(--color-error);
+}
+
+/* Panels & Sections */
+.panel {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.panel-login {
+    max-width: 480px;
+    margin: 1.5rem auto;
+}
+
+.lead-text {
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    color: var(--color-text);
+}
+
+/* Forms & Buttons */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: var(--color-navy);
+    margin-bottom: 0.4rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-text);
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 2px;
+}
+
+.form-input:focus {
+    outline: 2px solid var(--color-navy);
+    border-color: var(--color-navy);
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--color-navy);
+    color: var(--color-bg-surface);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--color-navy);
+    border-radius: 2px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: var(--color-navy);
+    border-bottom: 2px solid var(--color-gold);
+    color: var(--color-gold-light);
+    text-decoration: none;
+}
+
+.secondary-actions {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+}
+
+/* Welcome Club Header */
+.club-summary-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-navy);
+    border-radius: 3px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.75rem;
+}
+
+.club-identity h2 {
+    margin-bottom: 0.25rem;
+}
+
+.club-email {
+    color: var(--color-muted);
+    margin: 0 0 0.5rem 0;
+    font-size: 0.95rem;
+}
+
+.club-nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.95rem;
+}
+
+.points-box {
+    text-align: right;
+    padding: 0.5rem 1rem;
+    border-left: 2px solid var(--color-gold);
+}
+
+.points-figure {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--color-gold);
+    line-height: 1.1;
+}
+
+.points-label {
+    font-size: 0.9rem;
+    color: var(--color-navy);
+    font-weight: 600;
+    margin: 0.25rem 0 0 0;
+}
+
+/* Competitions Calendar List */
+.competitions-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.competition-item {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    padding: 1.15rem 1.25rem;
+    margin-bottom: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.competition-info {
+    flex: 1 1 240px;
+}
+
+.competition-date {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    margin: 0 0 0.25rem 0;
+}
+
+.competition-name {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    margin: 0 0 0.35rem 0;
+}
+
+.competition-places {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.competition-status-action {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.status-label {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: 2px;
+}
+
+.status-open {
+    color: var(--color-navy);
+    border-color: var(--color-gold);
+    background-color: var(--color-gold-light);
+}
+
+.status-full {
+    color: var(--color-error);
+    border-color: var(--color-error);
+    background-color: var(--color-error-bg);
+}
+
+.status-past {
+    color: var(--color-muted);
+    border-color: var(--color-border);
+    background-color: var(--color-row-alt);
+}
+
+/* Booking rules callout */
+.rules-box {
+    background-color: var(--color-row-alt);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-navy);
+    padding: 0.85rem 1rem;
+    margin: 1rem 0 1.25rem 0;
+    font-size: 0.95rem;
+}
+
+/* Official Standings Table (points.html) */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.points-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+}
+
+.points-table thead th {
+    background-color: var(--color-navy);
+    color: var(--color-bg-surface);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--color-gold);
+}
+
+.points-table thead th:first-child {
+    width: 4.5rem;
+    color: var(--color-bg-surface);
+}
+
+.points-table thead th:last-child {
+    text-align: right;
+    color: var(--color-bg-surface);
+}
+
+.points-table tbody td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.points-table tbody tr:nth-child(even) {
+    background-color: var(--color-row-alt);
+}
+
+.points-table tbody td:first-child {
+    width: 4.5rem;
+    color: var(--color-muted);
+    font-weight: 600;
+}
+
+.points-table tbody td:last-child {
+    text-align: right;
+    font-weight: 700;
+    color: var(--color-navy);
+}
+
+/* Footer */
+.site-footer {
+    border-top: 1px solid var(--color-border);
+    background-color: var(--color-bg-surface);
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 1rem;
+    margin-top: auto;
+}
+
+/* Responsive adjustments for 360px screens */
+@media (max-width: 480px) {
+    .site-header {
+        padding: 0.85rem 0;
+    }
+
+    .header-inner {
+        padding: 0 0.75rem;
+    }
+
+    .site-brand {
+        font-size: 1.05rem;
+    }
+
+    .main-container {
+        margin: 1.25rem auto;
+        padding: 0 0.75rem;
+    }
+
+    .panel,
+    .club-summary-bar,
+    .competition-item {
+        padding: 1rem;
+    }
+
+    .points-box {
+        text-align: left;
+        border-left: none;
+        border-top: 2px solid var(--color-gold);
+        padding: 0.75rem 0 0 0;
+        width: 100%;
+    }
+
+    .points-table thead th,
+    .points-table tbody td {
+        padding: 0.6rem 0.65rem;
+    }
+}

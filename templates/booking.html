@@ -1,18 +1,29 @@
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réservation pour {{competition['name']}} | GUDLFT — Réservations des compétitions</title>
-</head>
-<body>
-    <h2>{{competition['name']}}</h2>
-    <p>Date : {{competition['date'] | date_fr}}</p>
-    Places disponibles : {{competition['numberOfPlaces']}}
+{% extends "base.html" %}
+
+{% block title %}Réservation — {{ competition['name'] }} | GUDLFT — Réservations des compétitions{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>{{ competition['name'] }}</h2>
+    <p class="competition-date">Date : {{ competition['date'] | date_fr }}</p>
+    <p>Places restantes : {{ competition['numberOfPlaces'] }}</p>
+
+    <div class="rules-box">
+        Règles de réservation : 1 point = 1 place, 12 places maximum par club et par compétition.
+    </div>
+
     <form action="/purchasePlaces" method="post">
-        <input type="hidden" name="club" value="{{club['name']}}">
-        <input type="hidden" name="competition" value="{{competition['name']}}">
-        <label for="places">Combien de places ?</label><input type="number" name="places" id="places"/>
-        <button type="submit">Réserver</button>
+        <input type="hidden" name="club" value="{{ club['name'] }}">
+        <input type="hidden" name="competition" value="{{ competition['name'] }}">
+        <div class="form-group">
+            <label for="places" class="form-label">Combien de places ?</label>
+            <input type="number" name="places" id="places" class="form-input" min="1" max="12" required>
+        </div>
+        <button type="submit" class="btn">Confirmer la réservation</button>
     </form>
-</body>
-</html>
+
+    <div class="secondary-actions">
+        <a href="{{ url_for('index') }}">Retour à l'accueil</a>
+    </div>
+</section>
+{% endblock %}

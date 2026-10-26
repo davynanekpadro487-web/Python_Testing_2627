@@ -1,27 +1,32 @@
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Points des clubs | GUDLFT — Réservations des compétitions</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Points des clubs | GUDLFT — Réservations des compétitions{% endblock %}
+
+{% block content %}
+<section class="panel">
     <h1>Points des clubs</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Club</th>
-                <th>Points</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for club in clubs %}
-            <tr>
-                <td>{{club['name']}}</td>
-                <td>{{club['points']}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <a href="{{ url_for('index') }}">Retour à l'accueil</a>
-</body>
-</html>
+    <div class="table-wrapper">
+        <table class="points-table">
+            <thead>
+                <tr>
+                    <th>Rang</th>
+                    <th>Club</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for club in clubs | sort_by_points %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ club['name'] }}</td>
+                    <td>{{ club['points'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="secondary-actions">
+        <a href="{{ url_for('index') }}">Retour à l'accueil</a>
+    </div>
+</section>
+{% endblock %}

@@ -76,7 +76,7 @@ def test_booking_one_place_is_accepted(client):
     body = text_of(response)
 
     assert response.status_code == 200
-    assert "Réservation confirmée : 1 place(s) réservée(s)." in body
+    assert "Réservation confirmée : 1 place réservée." in body
     assert INVALID_PLACES_ERROR not in body
     assert int(get(server.clubs, "Test Club")["points"]) == 9
     assert int(get(server.competitions, "Future Competition")["numberOfPlaces"]) == 24

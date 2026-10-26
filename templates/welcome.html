@@ -1,38 +1,47 @@
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Synthèse | GUDLFT — Réservations des compétitions</title>
-</head>
-<body>
-    <h2>Bienvenue, {{club['email']}}</h2>
-    <a href="{{url_for('logout')}}">Se déconnecter</a>
-    <a href="{{ url_for('points') }}">Voir les points des clubs</a>
+{% extends "base.html" %}
 
-    {% with messages = get_flashed_messages()%}
-    {% if messages %}
-        <ul>
-        {% for message in messages %}
-            <li>{{message}}</li>
-        {% endfor %}
-        </ul>
-    {% endif%}
-    Points disponibles : {{club['points']}}
-    <h3>Compétitions :</h3>
-    <ul>
-        {% for comp in competitions%}
-        <li>
-            {{comp['name']}}<br />
-            Date : {{comp['date'] | date_fr}}<br />
-            Nombre de places : {{comp['numberOfPlaces']}}
-            {%if comp['numberOfPlaces']|int >0%}
-            <a href="{{ url_for('book',competition=comp['name'],club=club['name']) }}">Réserver des places</a>
-            {%endif%}
+{% block title %}Espace Club | GUDLFT — Réservations des compétitions{% endblock %}
+
+{% block content %}
+<section class="club-summary-bar">
+    <div class="club-identity">
+        <h2>{{ club['name'] }}</h2>
+        <p class="club-email">Bienvenue, {{ club['email'] }}</p>
+        <div class="club-nav-links">
+            <a href="{{ url_for('points') }}">Voir les points des clubs</a>
+            <a href="{{ url_for('logout') }}">Se déconnecter</a>
+        </div>
+    </div>
+    <div class="points-box">
+        <span class="points-figure">{{ club['points'] }}</span>
+        <p class="points-label">Points disponibles</p>
+    </div>
+</section>
+
+<section>
+    <h3>Calendrier des compétitions</h3>
+    <ul class="competitions-list">
+        {% for comp in competitions %}
+        {% set past = isPastCompetition(comp) %}
+        {% set places = comp['numberOfPlaces'] | int %}
+        <li class="competition-item">
+            <div class="competition-info">
+                <p class="competition-date">Date : {{ comp['date'] | date_fr }}</p>
+                <p class="competition-name">{{ comp['name'] }}</p>
+                <p class="competition-places">Places restantes : {{ comp['numberOfPlaces'] }}</p>
+            </div>
+            <div class="competition-status-action">
+                {% if past %}
+                <span class="status-label status-past">Terminée</span>
+                {% elif places <= 0 %}
+                <span class="status-label status-full">Complète</span>
+                {% else %}
+                <span class="status-label status-open">Ouverte</span>
+                <a href="{{ url_for('book', competition=comp['name'], club=club['name']) }}" class="btn">Réserver des places</a>
+                {% endif %}
+            </div>
         </li>
-        <hr />
         {% endfor %}
     </ul>
-    {%endwith%}
-
-</body>
-</html>
+</section>
+{% endblock %}
