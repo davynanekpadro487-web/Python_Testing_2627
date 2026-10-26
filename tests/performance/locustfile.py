@@ -5,7 +5,20 @@ Spécifications :
 - Chargement des compétitions (/showSummary) : < 5 s
 - Mise à jour des points (/purchasePlaces) : < 2 s
 """
-from locust import HttpUser, between, task
+from locust import HttpUser, between, events, task
+
+booking_stats = {"accepted": 0, "refused": 0}
+
+
+@events.quitting.add_listener
+def log_booking_stats(environment, **_kwargs):
+    """Affiche en fin de tir le décompte exact des réservations acceptées et refusées."""
+    total = booking_stats["accepted"] + booking_stats["refused"]
+    print(
+        f"\n[Bilan Mise à jour des points] Total={total} | "
+        f"Réservations confirmées={booking_stats['accepted']} | "
+        f"Refus métier={booking_stats['refused']}"
+    )
 
 
 class GudlftUser(HttpUser):
@@ -33,7 +46,7 @@ class GudlftUser(HttpUser):
     @task(2)
     def update_points(self):
         """Réservation d'1 place sur Winter Cup et mise à jour des points (< 2 s)."""
-        self.client.post(
+        with self.client.post(
             "/purchasePlaces",
             data={
                 "club": "Simply Lift",
@@ -41,7 +54,16 @@ class GudlftUser(HttpUser):
                 "places": "1",
             },
             name="Mise à jour des points",
-        )
+            catch_response=True,
+        ) as response:
+            if response.status_code != 200:
+                response.failure(f"Statut HTTP inattendu : {response.status_code}")
+            elif "Réservation confirmée" in response.text:
+                booking_stats["accepted"] += 1
+                response.success()
+            else:
+                booking_stats["refused"] += 1
+                response.success()
 
     @task(2)
     def view_points_board(self):
