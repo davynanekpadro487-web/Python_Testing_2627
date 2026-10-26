@@ -2,6 +2,8 @@
 
 Application web légère (Proof of Concept) développée avec **Flask**, permettant aux secrétaires de clubs d'inscrire leurs athlètes aux compétitions régionales en utilisant leur solde de points, et d'afficher publiquement le classement des points des clubs.
 
+> 📄 **Rapports détaillés du projet** : consultez le [Rapport de Tests (`reports/RAPPORT_DE_TESTS.md`)](reports/RAPPORT_DE_TESTS.md) et le [Rapport de Performance (`reports/RAPPORT_DE_PERFORMANCE.md`)](reports/RAPPORT_DE_PERFORMANCE.md).
+
 ---
 
 ## 1. Objectif du projet
@@ -113,6 +115,8 @@ Conformément aux spécifications fonctionnelles :
    locust -f tests/performance/locustfile.py --headless -u 6 -r 6 -t 60s --host http://127.0.0.1:5000 --html reports/locust_report.html --csv reports/locust
    ```
 - **Rapports générés dans `reports/`** :
+  - `reports/RAPPORT_DE_TESTS.md`
+  - `reports/RAPPORT_DE_PERFORMANCE.md`
   - `reports/locust_report.html`
   - `reports/locust_stats.csv`
   - `reports/locust_stats_history.csv`
@@ -126,7 +130,7 @@ Conformément aux spécifications fonctionnelles :
 - `main` : branche principale contenant uniquement du code testé et fonctionnel.
 - `bug/<nom-descriptif>` : correction d'un bogue identifié en Phase 1.
 - `feature/<nom-descriptif>` : ajout d'une nouvelle fonctionnalité (tableau des points, traduction française, interface graphique).
-- `amelioration/<nom-descriptif>` : amélioration de la suite de tests, de la performance et de la qualité du code.
+- `amelioration/<nom-descriptif>` : amélioration de la suite de tests, de la performance, de la qualité du code et de la documentation.
 - `QA` : branche de revue finale créée depuis `main` (non fusionnée dans `main`).
 
 ---
