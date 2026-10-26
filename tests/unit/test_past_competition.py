@@ -1,9 +1,15 @@
 """Tests unitaires : interdiction de réserver une compétition passée
 (routes /book/<competition>/<club> et /purchasePlaces)."""
+import html
+
 import server
 
 
-PAST_COMPETITION_ERROR = b"This competition has already taken place, booking is not possible."
+PAST_COMPETITION_ERROR = "Cette compétition a déjà eu lieu, la réservation n'est pas possible."
+
+
+def text_of(response):
+    return html.unescape(response.data.decode("utf-8"))
 
 
 def book(client, club, competition, places):
@@ -21,10 +27,11 @@ def get(collection, name):
 
 def test_booking_past_competition_is_refused(client):
     response = book(client, "Test Club", "Past Competition", "2")
+    body = text_of(response)
 
     assert response.status_code == 200
-    assert PAST_COMPETITION_ERROR in response.data
-    assert b"Great-booking complete!" not in response.data
+    assert PAST_COMPETITION_ERROR in body
+    assert "Réservation confirmée" not in body
     # Rien n'est modifié : ni les points du club, ni les places, ni le registre.
     assert int(get(server.clubs, "Test Club")["points"]) == 10
     assert int(get(server.competitions, "Past Competition")["numberOfPlaces"]) == 13
@@ -35,28 +42,31 @@ def test_booking_past_competition_is_refused(client):
 
 def test_booking_page_of_past_competition_shows_error_without_form(client):
     response = client.get("/book/Past Competition/Test Club")
+    body = text_of(response)
 
     assert response.status_code == 200
-    assert PAST_COMPETITION_ERROR in response.data
-    assert b"<form" not in response.data
-    assert b"/purchasePlaces" not in response.data
+    assert PAST_COMPETITION_ERROR in body
+    assert "<form" not in body
+    assert "/purchasePlaces" not in body
 
 
 # --- Happy path : compétition future (2030) ---
 
 def test_booking_future_competition_is_accepted(client):
     response = book(client, "Test Club", "Future Competition", "2")
+    body = text_of(response)
 
     assert response.status_code == 200
-    assert b"Great-booking complete! You booked 2 places." in response.data
-    assert PAST_COMPETITION_ERROR not in response.data
+    assert "Réservation confirmée : 2 place(s) réservée(s)." in body
+    assert PAST_COMPETITION_ERROR not in body
     assert int(get(server.clubs, "Test Club")["points"]) == 8
     assert int(get(server.competitions, "Future Competition")["numberOfPlaces"]) == 23
 
 
 def test_booking_page_of_future_competition_shows_form(client):
     response = client.get("/book/Future Competition/Test Club")
+    body = text_of(response)
 
     assert response.status_code == 200
-    assert b"<form" in response.data
-    assert PAST_COMPETITION_ERROR not in response.data
+    assert "<form" in body
+    assert PAST_COMPETITION_ERROR not in body
