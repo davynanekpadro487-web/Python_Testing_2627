@@ -91,5 +91,6 @@ def test_booking_page_with_existing_future_competition_and_club_shows_form(clien
     assert response.status_code == 200
     assert "<form" in body
     assert "/purchasePlaces" in body
+    assert "Places restantes : 25" in body
     assert 'value="Test Club"' in body
     assert 'value="Future Competition"' in body

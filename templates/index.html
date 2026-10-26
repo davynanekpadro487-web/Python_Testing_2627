@@ -1,26 +1,22 @@
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUDLFT — Réservations des compétitions</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Connexion | GUDLFT — Réservations des compétitions{% endblock %}
+
+{% block content %}
+<section class="panel panel-login">
     <h1>Bienvenue sur le portail de réservation GUDLFT</h1>
-    Veuillez saisir votre adresse e-mail de secrétaire pour continuer :
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-        {% for message in messages %}
-            <li>{{message}}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-    {% endwith %}
-    <form action="showSummary" method="post">
-        <label for="email">Adresse e-mail :</label>
-        <input type="email" name="email" id="email"/>
-        <button type="submit">Se connecter</button>
+    <p class="lead-text">Veuillez saisir votre adresse e-mail de secrétaire pour continuer :</p>
+
+    <form action="{{ url_for('showSummary') }}" method="post">
+        <div class="form-group">
+            <label for="email" class="form-label">Adresse e-mail :</label>
+            <input type="email" name="email" id="email" class="form-input" required>
+        </div>
+        <button type="submit" class="btn">Se connecter</button>
     </form>
-    <a href="{{ url_for('points') }}">Voir les points des clubs</a>
-</body>
-</html>
+
+    <div class="secondary-actions">
+        <a href="{{ url_for('points') }}">Voir les points des clubs</a>
+    </div>
+</section>
+{% endblock %}

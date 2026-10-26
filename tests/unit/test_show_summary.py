@@ -13,7 +13,9 @@ def test_valid_email_shows_welcome_page(client):
     body = text_of(response)
     assert response.status_code == 200
     assert "Bienvenue, test@club.com" in body
-    assert "Points disponibles : 10" in body
+    assert '<span class="points-figure">10</span>' in body
+    assert "Points disponibles" in body
+    assert "Places restantes : 25" in body
     assert "Se déconnecter" in body
 
 
@@ -25,6 +27,7 @@ def test_unknown_email_returns_to_login_with_error(client):
     assert response.status_code == 200
     assert "Bienvenue sur le portail de réservation GUDLFT" in body
     assert "Désolé, cette adresse e-mail est introuvable." in body
+    assert "flash-error" in body
 
 
 def test_empty_email_returns_to_login_with_error(client):
@@ -33,6 +36,7 @@ def test_empty_email_returns_to_login_with_error(client):
     assert response.status_code == 200
     assert "Bienvenue sur le portail de réservation GUDLFT" in body
     assert "Veuillez saisir votre adresse e-mail." in body
+    assert "flash-error" in body
 
 
 def test_date_fr_formats_valid_datetime():
@@ -50,3 +54,17 @@ def test_welcome_page_uses_date_fr_filter(client):
     body = text_of(response)
     assert "15 juin 2030 à 10h00" in body
     assert "27 mars 2020 à 10h00" in body
+
+
+def test_stylesheet_is_loaded_on_all_pages(client):
+    pages = [
+        client.get("/"),
+        client.post("/showSummary", data={"email": "test@club.com"}),
+        client.get("/book/Future Competition/Test Club"),
+        client.get("/points"),
+    ]
+    for res in pages:
+        body = text_of(res)
+        assert res.status_code == 200
+        assert "/static/css/style.css" in body
+        assert "GUDLFT — Portail des secrétariats de clubs" in body
